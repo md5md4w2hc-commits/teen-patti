@@ -9,9 +9,11 @@ struct Card
     char suit;
 };
 
-struct hand
+struct Hand
 {
-    
+    Card card1;
+    Card card2;
+    Card card3;
 };
 
 int drawCard(std::vector<int>& remaining, std::mt19937& gen)
@@ -48,5 +50,7 @@ int main()
     }
     std::cout << std::endl;
 
+    std::vector<Hand> Player;
+    
     std::cin.get();
 }
