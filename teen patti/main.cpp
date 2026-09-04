@@ -9,6 +9,11 @@ struct Card
     char suit;
 };
 
+struct hand
+{
+    
+};
+
 int drawCard(std::vector<int>& remaining, std::mt19937& gen)
 {
     std::uniform_int_distribution<> dist(0, (int)remaining.size() - 1);
