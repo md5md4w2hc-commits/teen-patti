@@ -16,18 +16,6 @@ struct Hand
     Card card3;
 };
 
-int drawCard(std::vector<int>& remaining, std::mt19937& gen)
-{
-    std::uniform_int_distribution<> dist(0, (int)remaining.size() - 1);
-    int pick = dist(gen);
-    int cardIndex = remaining[pick];
-
-    remaining[pick] = remaining.back();
-    remaining.pop_back();
-
-    return cardIndex;
-}
-
 int main()
 {
     std::vector<Card> deck = {
@@ -37,20 +25,7 @@ int main()
         {1,'S'},{2,'S'},{3,'S'},{4,'S'},{5,'S'},{6,'S'},{7,'S'},{8,'S'},{9,'S'},{10,'S'},{11,'S'},{12,'S'},{13,'S'}
     };
 
-    std::vector<int> remaining(52);
-    std::iota(remaining.begin(), remaining.end(), 0);
-
-    std::random_device rd;
-    std::mt19937 gen(rd());
-
-    for (int i = 0; i < 18; i++) // e.g. deal 3 cards to 6 players
-    {
-        Card drawn = deck[drawCard(remaining, gen)];
-        std::cout << drawn.rank << drawn.suit << " ";
-    }
-    std::cout << std::endl;
-
-    std::vector<Hand> Player;
+    
     
     std::cin.get();
 }
