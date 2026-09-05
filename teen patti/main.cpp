@@ -60,6 +60,13 @@ struct Player
     Player_Hand hand;
 };
 
+struct Player_Mood
+{
+    int currentConfidence;
+    int streak; // wins/losses in a row
+    int tilt; // rises after losses, may increase bluff frequency
+};
+
 int maxValue(int a, int b, int c)
 {
     int max = a;
