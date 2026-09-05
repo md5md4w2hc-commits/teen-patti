@@ -40,12 +40,12 @@ std::vector<Card> Shuffel(std::vector<Card>& deck, int r)
     return deck;
 }
 
-std::tuple<Card , std::vector<Card>> Drawing(std::vector<Card> deck)
+Card Drawing(std::vector<Card> &deck)
 {
     int r = Random(deck.size());
     Card x1 = deck.at(r);
-    deck = Shuffel(deck , r);
-    return {x1 , deck};
+    Shuffel(deck , r);
+    return x1;
 }
 
 int main()
@@ -58,7 +58,7 @@ int main()
         {1,'S'},{2,'S'},{3,'S'},{4,'S'},{5,'S'},{6,'S'},{7,'S'},{8,'S'},{9,'S'},{10,'S'},{11,'S'},{12,'S'},{13,'S'}
     };
     
-    auto[x1 , deck_shuffeld] = Drawing(deck);
+    Card x1 = Drawing(deck);
     
     std::cout << x1.rank << x1.suit ;
     
