@@ -1,10 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <random>
-#include <numeric>
-#include <array>
 #include <algorithm>
-#include <tuple>
 
 struct Card
 {
@@ -43,6 +40,16 @@ Card Drawing(std::vector<Card> &deck)
     return x1;
 }
 
+Player_Hand DealHand(std::vector<Card> &deck)
+{
+    Player_Hand hand;
+    hand.card1 = Drawing(deck);
+    hand.card2 = Drawing(deck);
+    hand.card3 = Drawing(deck);
+    
+    return hand;
+}
+
 int main()
 {
     std::vector<Card> deck =
@@ -53,76 +60,19 @@ int main()
         {1,'S'},{2,'S'},{3,'S'},{4,'S'},{5,'S'},{6,'S'},{7,'S'},{8,'S'},{9,'S'},{10,'S'},{11,'S'},{12,'S'},{13,'S'}
     };
 
-    Player_Hand player1;
-    player1.card1 = Drawing(deck);
-    player1.card2 = Drawing(deck);
-    player1.card3 = Drawing(deck);
+    std::vector<Player_Hand> players(6);
     
-    std::cout << deck.size() << '\n';
-    std::cout << player1.card1.rank << player1.card1.suit << '\n';
-    std::cout << player1.card2.rank << player1.card2.suit << '\n';
-    std::cout << player1.card3.rank << player1.card3.suit << '\n' << '\n';
-    
-    Player_Hand player2;
-    player2.card1 = Drawing(deck);
-    player2.card2 = Drawing(deck);
-    player2.card3 = Drawing(deck);
-    
-    std::cout << deck.size() << '\n';
-    std::cout << player2.card1.rank << player2.card1.suit << '\n';
-    std::cout << player2.card2.rank << player2.card2.suit << '\n';
-    std::cout << player2.card3.rank << player2.card3.suit << '\n' << '\n';
-    
-    Player_Hand player3;
-    player3.card1 = Drawing(deck);
-    player3.card2 = Drawing(deck);
-    player3.card3 = Drawing(deck);
-    
-    std::cout << deck.size() << '\n';
-    std::cout << player3.card1.rank << player3.card1.suit << '\n';
-    std::cout << player3.card2.rank << player3.card2.suit << '\n';
-    std::cout << player3.card3.rank << player3.card3.suit << '\n' << '\n';
-    
-    Player_Hand player4;
-    player4.card1 = Drawing(deck);
-    player4.card2 = Drawing(deck);
-    player4.card3 = Drawing(deck);
-    
-    std::cout << deck.size() << '\n';
-    std::cout << player4.card1.rank << player4.card1.suit << '\n';
-    std::cout << player4.card2.rank << player4.card2.suit << '\n';
-    std::cout << player4.card3.rank << player4.card3.suit << '\n' << '\n';
-    
-    Player_Hand player5;
-    player5.card1 = Drawing(deck);
-    player5.card2 = Drawing(deck);
-    player5.card3 = Drawing(deck);
-    
-    std::cout << deck.size() << '\n';
-    std::cout << player5.card1.rank << player5.card1.suit << '\n';
-    std::cout << player5.card2.rank << player5.card2.suit << '\n';
-    std::cout << player5.card3.rank << player5.card3.suit << '\n' << '\n';
-    
-    Player_Hand player6;
-    player6.card1 = Drawing(deck);
-    player6.card2 = Drawing(deck);
-    player6.card3 = Drawing(deck);
-    
-    std::cout << deck.size() << '\n';
-    std::cout << player6.card1.rank << player6.card1.suit << '\n';
-    std::cout << player6.card2.rank << player6.card2.suit << '\n';
-    std::cout << player6.card3.rank << player6.card3.suit << '\n' << '\n';
+    for (int i = 0; i < 6; ++i)
+    {
+        players[i] = DealHand(deck);
+        
+        std::cout << "Deck size: " << deck.size() << '\n';
+        std::cout << players[i].card1.rank << players[i].card1.suit << '\n';
+        std::cout << players[i].card2.rank << players[i].card2.suit << '\n';
+        std::cout << players[i].card3.rank << players[i].card3.suit << "\n\n";
+    }
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-
     
     
     std::cin.get();
