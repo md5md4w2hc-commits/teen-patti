@@ -59,8 +59,12 @@ int main()
     };
     
     Card x1 = Drawing(deck);
+    Card x2 = Drawing(deck);
+    Card x3 = Drawing(deck);
     
-    std::cout << x1.rank << x1.suit ;
+    std::cout << x1.rank << x1.suit << std::endl;
+    std::cout << x2.rank << x2.suit << std::endl;
+    std::cout << x3.rank << x3.suit << std::endl;
     
     std::vector<Hand> player ;
     
