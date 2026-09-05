@@ -50,6 +50,15 @@ Player_Hand DealHand(std::vector<Card> &deck)
     return hand;
 }
 
+struct Player
+{
+    double balance;
+    int confidence;
+    int bluff;
+    int honesty;
+    Player_Hand hand;
+};
+
 int main()
 {
     std::vector<Card> deck =
@@ -65,12 +74,79 @@ int main()
     for (int i = 0; i < 6; ++i)
     {
         players[i] = DealHand(deck);
-        
-        std::cout << "Deck size: " << deck.size() << '\n';
-        std::cout << players[i].card1.rank << players[i].card1.suit << '\n';
-        std::cout << players[i].card2.rank << players[i].card2.suit << '\n';
-        std::cout << players[i].card3.rank << players[i].card3.suit << "\n\n";
     }
+    
+    Player pranjal;
+    pranjal.balance = 10000;
+    pranjal.confidence = 100;
+    pranjal.bluff = 10;
+    pranjal.honesty = 80;
+    pranjal.hand = players[0];
+    
+    Player paawani;
+    paawani.balance = 10000;
+    paawani.confidence = 90;
+    paawani.bluff = 40;
+    paawani.honesty = 50;
+    paawani.hand = players[1];
+    
+    Player candy;
+    candy.balance = 10000;
+    candy.confidence = 70;
+    candy.bluff = 0;
+    candy.honesty = 100;
+    candy.hand = players[2];
+    
+    Player kishu;
+    kishu.balance = 10000;
+    kishu.confidence = 100;
+    kishu.bluff = 90;
+    kishu.hand = players[3];
+    
+    Player anita;
+    anita.balance = 10000;
+    anita.confidence = 100;
+    anita.bluff = 0;
+    anita.honesty = 100;
+    anita.hand = players[4];
+    
+    Player popo;
+    popo.balance = 10000;
+    popo.confidence = 0;
+    popo.bluff = 0;
+    popo.honesty = 100;
+    popo.hand = players[5];
+    
+    std::cout << "pranjal" << '\n';
+    std::cout << pranjal.hand.card1.rank << popo.hand.card1.suit << '\n';
+    std::cout << pranjal.hand.card2.rank << popo.hand.card2.suit << '\n';
+    std::cout << pranjal.hand.card3.rank << popo.hand.card3.suit << '\n';
+    
+    std::cout << "paawani" << '\n';
+    std::cout << paawani.hand.card1.rank << popo.hand.card1.suit << '\n';
+    std::cout << paawani.hand.card2.rank << popo.hand.card2.suit << '\n';
+    std::cout << paawani.hand.card3.rank << popo.hand.card3.suit << '\n';
+    
+    std::cout << "candy" << '\n';
+    std::cout << candy.hand.card1.rank << popo.hand.card1.suit << '\n';
+    std::cout << candy.hand.card2.rank << popo.hand.card2.suit << '\n';
+    std::cout << candy.hand.card3.rank << popo.hand.card3.suit << '\n';
+    
+    std::cout << "kishu" << '\n';
+    std::cout << kishu.hand.card1.rank << popo.hand.card1.suit << '\n';
+    std::cout << kishu.hand.card2.rank << popo.hand.card2.suit << '\n';
+    std::cout << kishu.hand.card3.rank << popo.hand.card3.suit << '\n';
+    
+    std::cout << "anita" << '\n';
+    std::cout << anita.hand.card1.rank << popo.hand.card1.suit << '\n';
+    std::cout << anita.hand.card2.rank << popo.hand.card2.suit << '\n';
+    std::cout << anita.hand.card3.rank << popo.hand.card3.suit << '\n';
+    
+    std::cout << "popo" << '\n';
+    std::cout << popo.hand.card1.rank << popo.hand.card1.suit << '\n';
+    std::cout << popo.hand.card2.rank << popo.hand.card2.suit << '\n';
+    std::cout << popo.hand.card3.rank << popo.hand.card3.suit << '\n';
+        
     
     
     
