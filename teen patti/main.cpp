@@ -306,7 +306,7 @@ Player Check_winner_for_pair(const Player &p1 , const Player &p2)
         }
         else
         {
-            winner = Winner(p1);
+            winner = Winner(p2);
         }
     }
     
