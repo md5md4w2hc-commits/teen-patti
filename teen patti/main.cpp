@@ -234,7 +234,7 @@ Player Check_winner_for_run(const Player &p1 , const Player &p2)
         }
         else
         {
-            winner = p1;
+            winner = Winner(p1);
         }
     }
     if(IsSequence(ranks_2))
@@ -245,7 +245,7 @@ Player Check_winner_for_run(const Player &p1 , const Player &p2)
         }
         else
         {
-            winner = p2;
+            winner = Winner(p2);
         }
     }
     
@@ -281,7 +281,7 @@ Player Check_winner_for_pair(const Player &p1 , const Player &p2)
         }
         else
         {
-            winner = p1;
+            winner = Winner(p1);
         }
     }
     else if(IsPair(p2))
@@ -306,11 +306,25 @@ Player Check_winner_for_pair(const Player &p1 , const Player &p2)
         }
         else
         {
-            winner = p1;
+            winner = Winner(p1);
         }
     }
     
     return winner;
+}
+
+void DebugHand(const Player &p)
+{
+    std::cout << p.name << ": "
+              << p.hand.card1.rank << p.hand.card1.suit << " "
+              << p.hand.card2.rank << p.hand.card2.suit << " "
+              << p.hand.card3.rank << p.hand.card3.suit
+              << "  | Trail=" << std::boolalpha << IsTrail(p)
+              << " Colour=" << IsColour(p)
+              << " Pair="   << IsPair(p);
+
+    std::vector<int> ranks = {p.hand.card1.rank, p.hand.card2.rank, p.hand.card3.rank};
+    std::cout << " Sequence=" << IsSequence(ranks) << '\n';
 }
 
 int main()
@@ -378,35 +392,12 @@ int main()
     p6.honesty = 100;
     p6.hand = player_hand[5];
     
-    std::cout << p1.name << '\n';
-    std::cout << p1.hand.card1.rank << p1.hand.card1.suit << '\n';
-    std::cout << p1.hand.card2.rank << p1.hand.card2.suit << '\n';
-    std::cout << p1.hand.card3.rank << p1.hand.card3.suit << '\n';
-    
-    std::cout << p2.name << '\n';
-    std::cout << p2.hand.card1.rank << p2.hand.card1.suit << '\n';
-    std::cout << p2.hand.card2.rank << p2.hand.card2.suit << '\n';
-    std::cout << p2.hand.card3.rank << p2.hand.card3.suit << '\n';
-    
-    std::cout << p3.name << '\n';
-    std::cout << p3.hand.card1.rank << p3.hand.card1.suit << '\n';
-    std::cout << p3.hand.card2.rank << p3.hand.card2.suit << '\n';
-    std::cout << p3.hand.card3.rank << p3.hand.card3.suit << '\n';
-    
-    std::cout << p4.name << '\n';
-    std::cout << p4.hand.card1.rank << p4.hand.card1.suit << '\n';
-    std::cout << p4.hand.card2.rank << p4.hand.card2.suit << '\n';
-    std::cout << p4.hand.card3.rank << p4.hand.card3.suit << '\n';
-    
-    std::cout << p5.name << '\n';
-    std::cout << p5.hand.card1.rank << p5.hand.card1.suit << '\n';
-    std::cout << p5.hand.card2.rank << p5.hand.card2.suit << '\n';
-    std::cout << p5.hand.card3.rank << p5.hand.card3.suit << '\n';
-    
-    std::cout << p6.name << '\n';
-    std::cout << p6.hand.card1.rank << p6.hand.card1.suit << '\n';
-    std::cout << p6.hand.card2.rank << p6.hand.card2.suit << '\n';
-    std::cout << p6.hand.card3.rank << p6.hand.card3.suit << '\n';
+    DebugHand(p1);
+    DebugHand(p2);
+    DebugHand(p3);
+    DebugHand(p4);
+    DebugHand(p5);
+    DebugHand(p6);
         
     
     
