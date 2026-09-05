@@ -81,13 +81,46 @@ Player Check_for_max(const Player &p1 ,const Player &p2)
     int a = maxValue(p1);
     int b = maxValue(p2);
     
+    std::vector<int> rank_1 = {p1.hand.card1.rank , p1.hand.card2.rank , p1.hand.card3.rank};
+    std::sort(rank_1.begin() , rank_1.end());
+    
+    std::vector<int> rank_2 = {p2.hand.card1.rank , p2.hand.card2.rank , p2.hand.card3.rank};
+    std::sort(rank_2.begin() , rank_2.end());
+    
     if(a > b)
     {
         max = p1;
     }
-    if(b < a)
+    if(a < b)
     {
         max = p2;
+    }
+    if(a == b)
+    {
+        int x = rank_1[1];
+        int y = rank_2[1];
+        
+        if(x > y)
+        {
+            max = p1;
+        }
+        if(x < y)
+        {
+            max = p2;
+        }
+        if(x == y)
+        {
+            int x = rank_1[0];
+            int y = rank_2[0];
+            if(x > y)
+            {
+                max = p1;
+            }
+            if(x < y)
+            {
+                max = p2;
+            }
+        }
     }
     
     return max;
@@ -309,6 +342,15 @@ Player Check_winner_for_pair(const Player &p1 , const Player &p2)
             winner = Winner(p2);
         }
     }
+    
+    return winner;
+}
+
+Player Check_winner_for_highCard(const Player &p1 , const Player &p2)
+{
+    Player winner;
+    
+    winner = Winner(Check_for_max(p1 , p2));
     
     return winner;
 }
