@@ -371,8 +371,6 @@ void DebugHand(const Player &p)
 
 Player Final(const Player &p1 ,const Player &p2)
 {
-    Player winner;
-    
     std::vector<int> rank_1 = {p1.hand.card1.rank , p1.hand.card2.rank , p1.hand.card3.rank};
     std::vector<int> rank_2 = {p2.hand.card1.rank , p2.hand.card2.rank , p2.hand.card3.rank};
     
@@ -396,8 +394,6 @@ Player Final(const Player &p1 ,const Player &p2)
     {
         return Check_winner_for_highCard(p1 , p2);
     }
- 
-    return winner;
 }
 
 int main()
