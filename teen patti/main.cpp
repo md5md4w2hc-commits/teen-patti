@@ -2,6 +2,7 @@
 #include <vector>
 #include <random>
 #include <numeric>
+#include <array>
 
 struct Card
 {
@@ -16,6 +17,23 @@ struct Hand
     Card card3;
 };
 
+int Random()
+{
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dist(0, 51);
+    int r = dist(gen);
+    
+    return r;
+}
+
+std::vector<Card> Shuffel(std::vector<Card> deck , int r)
+{
+    std::erase(deck, r);
+    
+    return deck;
+}
+
 int main()
 {
     std::vector<Card> deck = {
@@ -25,7 +43,12 @@ int main()
         {1,'S'},{2,'S'},{3,'S'},{4,'S'},{5,'S'},{6,'S'},{7,'S'},{8,'S'},{9,'S'},{10,'S'},{11,'S'},{12,'S'},{13,'S'}
     };
 
+    int r = Random();
     
+    Card x = deck.at(r);
+    
+    
+    std::vector<Hand> player ;
     
     std::cin.get();
 }
