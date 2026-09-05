@@ -369,6 +369,37 @@ void DebugHand(const Player &p)
     std::cout << " Sequence=" << IsSequence(ranks) << '\n';
 }
 
+Player Final(const Player &p1 ,const Player &p2)
+{
+    Player winner;
+    
+    std::vector<int> rank_1 = {p1.hand.card1.rank , p1.hand.card2.rank , p1.hand.card3.rank};
+    std::vector<int> rank_2 = {p2.hand.card1.rank , p2.hand.card2.rank , p2.hand.card3.rank};
+    
+    if(IsTrail(p1) || IsTrail(p2))
+    {
+        return Check_winner_for_trail(p1 , p2);
+    }
+    else if(IsSequence(rank_1) || IsSequence(rank_2))
+    {
+        return Check_winner_for_run(p1 , p2);
+    }
+    else if(IsColour(p1) || IsColour(p2))
+    {
+        return Check_winner_for_colour(p1 , p2);
+    }
+    else if(IsPair(p1) || IsPair(p2))
+    {
+        return Check_winner_for_pair(p1 , p2);
+    }
+    else
+    {
+        return Check_winner_for_highCard(p1 , p2);
+    }
+ 
+    return winner;
+}
+
 int main()
 {
     std::vector<Card> deck =
@@ -434,12 +465,15 @@ int main()
     p6.honesty = 100;
     p6.hand = player_hand[5];
     
+    
     DebugHand(p1);
     DebugHand(p2);
     DebugHand(p3);
     DebugHand(p4);
     DebugHand(p5);
     DebugHand(p6);
+    
+    Final(p1 , p2);
         
     
     
