@@ -67,11 +67,29 @@ struct Player_Mood
     int tilt; // rises after losses, may increase bluff frequency
 };
 
-int maxValue(int a, int b, int c)
+int maxValue(const Player &a)
 {
-    int max = a;
-    if (b > max) max = b;
-    if (c > max) max = c;
+    int max = a.hand.card1.rank;
+    if (a.hand.card2.rank > max) max = a.hand.card2.rank;
+    if (a.hand.card3.rank > max) max = a.hand.card3.rank;
+    return max;
+}
+
+Player Check_for_max(const Player &p1 ,const Player &p2)
+{
+    Player max;
+    int a = maxValue(p1);
+    int b = maxValue(p2);
+    
+    if(a > b)
+    {
+        max = p1;
+    }
+    if(b < a)
+    {
+        max = p2;
+    }
+    
     return max;
 }
 
@@ -79,6 +97,220 @@ Player Winner(Player p)
 {
     std::cout << "the winner is : " << p.name << '\n';
     return p;
+}
+
+bool IsSequence(std::vector<int> &ranks)
+{
+    std::sort(ranks.begin(), ranks.end());
+    
+    for (size_t i = 1; i < ranks.size(); ++i)
+        {
+            if (ranks[i] != ranks[i - 1] + 1)
+            {
+                return false;
+            }
+        }
+        return true;
+}
+
+bool IsTrail(const Player &p)
+{
+    if(p.hand.card1.rank == p.hand.card2.rank && p.hand.card2.rank == p.hand.card3.rank && p.hand.card3.rank == p.hand.card1.rank)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool IsColour(const Player &p)
+{
+    if(p.hand.card1.suit == p.hand.card2.suit && p.hand.card2.suit == p.hand.card3.suit && p.hand.card3.suit == p.hand.card1.suit)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool IsPair(const Player &p)
+{
+    int a = p.hand.card1.rank;
+    int b = p.hand.card2.rank;
+    int c = p.hand.card3.rank;
+    
+    return (a == b) || (b == c) || (a == c);
+}
+
+int FindPairValue(std::vector<int> nums) // returns -1 if no pair
+{
+    std::sort(nums.begin() , nums.end());
+    for (size_t i = 1 ; i < nums.size() ; ++i)
+    {
+        if (nums[i] == nums[i - 1])
+        {
+            return nums[i];
+        }
+    }
+    return -1;
+}
+
+Player Check_winner_for_trail(const Player &p1 ,const Player &p2)
+{
+    Player winner;
+    
+    if(IsTrail(p1))
+    {
+        if(IsTrail(p2))
+        {
+            winner = Winner(Check_for_max(p1 , p2));
+        }
+        else
+        {
+            winner = Winner(p1);
+        }
+    }
+    else if(IsTrail(p2))
+    {
+        if(IsTrail(p1))
+        {
+            winner = Winner(Check_for_max(p1 , p2));
+        }
+        else
+        {
+            winner = Winner(p2);
+        }
+    }
+    
+    return winner;
+}
+
+Player Check_winner_for_colour(const Player &p1 ,const Player &p2)
+{
+    Player winner;
+    
+    if(IsColour(p1))
+    {
+        if(IsColour(p2))
+        {
+            winner = Winner(Check_for_max(p1 , p2));
+        }
+        else
+        {
+            winner = Winner(p1);
+        }
+    }
+    else if(IsColour(p2))
+    {
+        if(IsColour(p1))
+        {
+            winner = Winner(Check_for_max(p1 , p2));
+        }
+        else
+        {
+            winner = Winner(p2);
+        }
+    }
+    
+    return winner;
+}
+
+Player Check_winner_for_run(const Player &p1 , const Player &p2)
+{
+    Player winner;
+    
+    std::vector<int> ranks_1 = {p1.hand.card1.rank , p1.hand.card2.rank , p1.hand.card3.rank};
+    std::vector<int> ranks_2 = {p2.hand.card1.rank , p2.hand.card2.rank , p2.hand.card3.rank};
+    
+    if(IsSequence(ranks_1))
+    {
+        if(IsSequence(ranks_2))
+        {
+            winner = Winner(Check_for_max(p1 , p2));
+        }
+        else
+        {
+            winner = p1;
+        }
+    }
+    if(IsSequence(ranks_2))
+    {
+        if(IsSequence(ranks_1))
+        {
+            winner = Winner(Check_for_max(p1 , p2));
+        }
+        else
+        {
+            winner = p2;
+        }
+    }
+    
+    return winner;
+}
+
+Player Check_winner_for_pair(const Player &p1 , const Player &p2)
+{
+    Player winner;
+    
+    std::vector<int> ranks_1 = {p1.hand.card1.rank , p1.hand.card2.rank , p1.hand.card3.rank};
+    std::vector<int> ranks_2 = {p2.hand.card1.rank , p2.hand.card2.rank , p2.hand.card3.rank};
+    
+    if(IsPair(p1))
+    {
+        if(IsPair(p2))
+        {
+            int a = FindPairValue(ranks_1);
+            int b = FindPairValue(ranks_2);
+            
+            if(a > b)
+            {
+                winner = Winner(p1);
+            }
+            else if(a == b)
+            {
+                winner = Winner(p1);
+            }
+            else
+            {
+                winner = Winner(p2);
+            }
+        }
+        else
+        {
+            winner = p1;
+        }
+    }
+    else if(IsPair(p2))
+    {
+        if(IsPair(p1))
+        {
+                int a = FindPairValue(ranks_1);
+                int b = FindPairValue(ranks_2);
+                
+                if(a > b)
+                {
+                    winner = Winner(p1);
+                }
+                else if(a == b)
+                {
+                    winner = Winner(p1);
+                }
+                else
+                {
+                    winner = Winner(p2);
+                }
+        }
+        else
+        {
+            winner = p1;
+        }
+    }
+    
+    return winner;
 }
 
 int main()
@@ -91,11 +323,11 @@ int main()
         {14,'S'},{2,'S'},{3,'S'},{4,'S'},{5,'S'},{6,'S'},{7,'S'},{8,'S'},{9,'S'},{10,'S'},{11,'S'},{12,'S'},{13,'S'}
     };
 
-    std::vector<Player_Hand> players(6);
+    std::vector<Player_Hand> player_hand(6);
     
     for (int i = 0; i < 6; ++i)
     {
-        players[i] = DealHand(deck);
+        player_hand[i] = DealHand(deck);
     }
     
     Player p1;
@@ -104,7 +336,7 @@ int main()
     p1.confidence = 100;
     p1.bluff = 10;
     p1.honesty = 80;
-    p1.hand = players[0];
+    p1.hand = player_hand[0];
     
     Player p2;
     p2.name = "Paawani";
@@ -112,7 +344,7 @@ int main()
     p2.confidence = 90;
     p2.bluff = 40;
     p2.honesty = 50;
-    p2.hand = players[1];
+    p2.hand = player_hand[1];
     
     Player p3;
     p3.name = "candy";
@@ -120,7 +352,7 @@ int main()
     p3.confidence = 70;
     p3.bluff = 0;
     p3.honesty = 100;
-    p3.hand = players[2];
+    p3.hand = player_hand[2];
     
     Player p4;
     p4.name = "kishu";
@@ -128,7 +360,7 @@ int main()
     p4.confidence = 100;
     p4.bluff = 100;
     p4.honesty = 0;
-    p4.hand = players[3];
+    p4.hand = player_hand[3];
     
     Player p5;
     p5.name = "anita";
@@ -136,7 +368,7 @@ int main()
     p5.confidence = 100;
     p5.bluff = 0;
     p5.honesty = 100;
-    p5.hand = players[4];
+    p5.hand = player_hand[4];
     
     Player p6;
     p6.name = "popo";
@@ -144,7 +376,7 @@ int main()
     p6.confidence = 0;
     p6.bluff = 0;
     p6.honesty = 100;
-    p6.hand = players[5];
+    p6.hand = player_hand[5];
     
     std::cout << p1.name << '\n';
     std::cout << p1.hand.card1.rank << p1.hand.card1.suit << '\n';
@@ -176,6 +408,8 @@ int main()
     std::cout << p6.hand.card2.rank << p6.hand.card2.suit << '\n';
     std::cout << p6.hand.card3.rank << p6.hand.card3.suit << '\n';
         
+    
+    
     
     std::cin.get();
 }
