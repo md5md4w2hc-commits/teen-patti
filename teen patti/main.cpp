@@ -26,7 +26,7 @@ int Random(int max)
     return r;
 }
 
-std::vector<Card> Shuffel(std::vector<Card>& deck, int r)
+std::vector<Card> Shuffel(std::vector<Card> &deck, int r)
 {
     deck.erase(deck.begin() + r);
     return deck;
@@ -52,6 +52,7 @@ Player_Hand DealHand(std::vector<Card> &deck)
 
 struct Player
 {
+    std::string name;
     double balance;
     int confidence;
     int bluff;
@@ -59,14 +60,185 @@ struct Player
     Player_Hand hand;
 };
 
+int maxValue(int a, int b, int c)
+{
+    int max = a;
+    if (b > max) max = b;
+    if (c > max) max = c;
+    return max;
+}
+
+Player Winner(Player p)
+{
+    std::cout << "the winner is : " << p.name << '\n';
+    return p;
+}
+
+Player Compare(const Player p1 ,const Player p2)
+{
+    if(p1.hand.card1.rank == p1.hand.card2.rank == p1.hand.card3.rank)  // trail
+    {
+        if(p2.hand.card1.rank == p2.hand.card2.rank == p2.hand.card3.rank)
+        {
+            if(p2.hand.card1.rank > p1.hand.card1.rank)
+            {
+                Winner(p2);
+            }
+            else
+            {
+                Winner(p1);
+            }
+        }
+        else
+        {
+            Winner(p1);
+        }
+    }
+    else if(p2.hand.card1.rank == p2.hand.card2.rank == p2.hand.card3.rank)
+    {
+        if(p1.hand.card1.rank == p1.hand.card2.rank == p1.hand.card3.rank)
+        {
+            if(p1.hand.card1.rank > p2.hand.card1.rank)
+            {
+                Winner(p1);
+            }
+            else
+            {
+                Winner(p2);
+            }
+        }
+        else
+        {
+            Winner(p2);
+        }
+        Winner(p2);
+    }
+    
+    if(p1.hand.card1.rank && p1.hand.card2.rank == p1.hand.card1.rank + 1 && p1.hand.card3.rank == p1.hand.card1.rank + 2) // run
+    {
+        if(p2.hand.card1.rank && p2.hand.card2.rank == p2.hand.card1.rank + 1 && p2.hand.card3.rank == p2.hand.card1.rank + 2)
+        {
+            if(maxValue(p1.hand.card1.rank , p1.hand.card2.rank , p1.hand.card3.rank) > maxValue(p2.hand.card1.rank , p2.hand.card2.rank , p2.hand.card3.rank))
+            {
+                Winner(p1);
+            }
+            else if(maxValue(p1.hand.card1.rank , p1.hand.card2.rank , p1.hand.card3.rank) == maxValue(p2.hand.card1.rank , p2.hand.card2.rank , p2.hand.card3.rank))
+            {
+                if(p1.hand.card1.suit == p1.hand.card2.suit == p1.hand.card3.suit) // double
+                {
+                    Winner(p1);
+                }
+                else                  // bug to fix
+                {
+                    Winner(p2);
+                }
+            }
+            else if(p1.hand.card1.suit == p1.hand.card2.suit == p1.hand.card3.suit) // double
+            {
+                if(p2.hand.card1.suit == p2.hand.card2.suit == p2.hand.card3.suit && maxValue(p1.hand.card1.rank , p1.hand.card2.rank , p1.hand.card3.rank) < maxValue(p2.hand.card1.rank , p2.hand.card2.rank , p2.hand.card3.rank))
+                {
+                    Winner(p2);
+                }
+                else if(p2.hand.card1.suit == p2.hand.card2.suit == p2.hand.card3.suit && maxValue(p1.hand.card1.rank , p1.hand.card2.rank , p1.hand.card3.rank) > maxValue(p2.hand.card1.rank , p2.hand.card2.rank , p2.hand.card3.rank))
+                {
+                    Winner(p1);
+                }
+                else
+                {
+                    Winner(p1);
+                }
+            }
+            else
+            {
+                Winner(p2);
+            }
+        }
+    }
+    else if(p2.hand.card1.rank && p2.hand.card2.rank == p2.hand.card1.rank + 1 && p2.hand.card3.rank == p2.hand.card1.rank + 2)
+    {
+        if(p1.hand.card1.rank && p1.hand.card2.rank == p1.hand.card1.rank + 1 && p1.hand.card3.rank == p1.hand.card1.rank + 2)
+        {
+            if(maxValue(p2.hand.card1.rank , p2.hand.card2.rank , p2.hand.card3.rank) > maxValue(p1.hand.card1.rank , p1.hand.card2.rank , p1.hand.card3.rank))
+            {
+                Winner(p2);
+            }
+            else if(maxValue(p1.hand.card1.rank , p1.hand.card2.rank , p1.hand.card3.rank) == maxValue(p2.hand.card1.rank , p2.hand.card2.rank , p2.hand.card3.rank))
+            {
+                if(p1.hand.card1.suit == p1.hand.card2.suit == p1.hand.card3.suit) // double
+                {
+                    Winner(p1);
+                }
+                else                  // bug to fix (logic error)
+                {
+                    Winner(p2);
+                }
+            }
+            else if(p1.hand.card1.suit == p1.hand.card2.suit == p1.hand.card3.suit) // double
+            {
+                if(p2.hand.card1.suit == p2.hand.card2.suit == p2.hand.card3.suit && maxValue(p1.hand.card1.rank , p1.hand.card2.rank , p1.hand.card3.rank) < maxValue(p2.hand.card1.rank , p2.hand.card2.rank , p2.hand.card3.rank))
+                {
+                    Winner(p2);
+                }
+                else if(p2.hand.card1.suit == p2.hand.card2.suit == p2.hand.card3.suit && maxValue(p1.hand.card1.rank , p1.hand.card2.rank , p1.hand.card3.rank) > maxValue(p2.hand.card1.rank , p2.hand.card2.rank , p2.hand.card3.rank))
+                {
+                    Winner(p1);
+                }
+                else
+                {
+                    Winner(p1);
+                }
+            }
+            else
+            {
+                Winner(p2);
+            }
+        }
+        Winner(p2);
+    }
+
+    
+    if(p1.hand.card1.suit == p1.hand.card2.suit == p1.hand.card3.suit) // color
+    {
+        if(p2.hand.card1.suit == p2.hand.card2.suit == p2.hand.card3.suit && maxValue(p1.hand.card1.rank , p1.hand.card2.rank , p1.hand.card3.rank) < maxValue(p2.hand.card1.rank , p2.hand.card2.rank , p2.hand.card3.rank))
+        {
+            Winner(p2);
+        }
+        else if(p2.hand.card1.suit == p2.hand.card2.suit == p2.hand.card3.suit && maxValue(p1.hand.card1.rank , p1.hand.card2.rank , p1.hand.card3.rank) > maxValue(p2.hand.card1.rank , p2.hand.card2.rank , p2.hand.card3.rank))
+        {
+            Winner(p1);
+        }
+        else
+        {
+            Winner(p1);
+        }
+    }
+   else if(p2.hand.card1.suit == p2.hand.card2.suit == p2.hand.card3.suit)
+   {
+       if(p1.hand.card1.suit == p1.hand.card2.suit == p1.hand.card3.suit && maxValue(p2.hand.card1.rank , p2.hand.card2.rank , p2.hand.card3.rank) < maxValue(p1.hand.card1.rank , p1.hand.card2.rank , p1.hand.card3.rank))
+       {
+           Winner(p1);
+       }
+       else if(p1.hand.card1.suit == p1.hand.card2.suit == p1.hand.card3.suit && maxValue(p1.hand.card1.rank , p1.hand.card2.rank , p1.hand.card3.rank) < maxValue(p2.hand.card1.rank , p2.hand.card2.rank , p2.hand.card3.rank))
+       {
+           Winner(p2);
+       }
+       else
+       {
+           Winner(p2);
+       }
+   }
+
+    return p1;
+}
+
 int main()
 {
     std::vector<Card> deck =
     {
-        {1,'H'},{2,'H'},{3,'H'},{4,'H'},{5,'H'},{6,'H'},{7,'H'},{8,'H'},{9,'H'},{10,'H'},{11,'H'},{12,'H'},{13,'H'},
-        {1,'D'},{2,'D'},{3,'D'},{4,'D'},{5,'D'},{6,'D'},{7,'D'},{8,'D'},{9,'D'},{10,'D'},{11,'D'},{12,'D'},{13,'D'},
-        {1,'C'},{2,'C'},{3,'C'},{4,'C'},{5,'C'},{6,'C'},{7,'C'},{8,'C'},{9,'C'},{10,'C'},{11,'C'},{12,'C'},{13,'C'},
-        {1,'S'},{2,'S'},{3,'S'},{4,'S'},{5,'S'},{6,'S'},{7,'S'},{8,'S'},{9,'S'},{10,'S'},{11,'S'},{12,'S'},{13,'S'}
+        {14,'H'},{2,'H'},{3,'H'},{4,'H'},{5,'H'},{6,'H'},{7,'H'},{8,'H'},{9,'H'},{10,'H'},{11,'H'},{12,'H'},{13,'H'},
+        {14,'D'},{2,'D'},{3,'D'},{4,'D'},{5,'D'},{6,'D'},{7,'D'},{8,'D'},{9,'D'},{10,'D'},{11,'D'},{12,'D'},{13,'D'},
+        {14,'C'},{2,'C'},{3,'C'},{4,'C'},{5,'C'},{6,'C'},{7,'C'},{8,'C'},{9,'C'},{10,'C'},{11,'C'},{12,'C'},{13,'C'},
+        {14,'S'},{2,'S'},{3,'S'},{4,'S'},{5,'S'},{6,'S'},{7,'S'},{8,'S'},{9,'S'},{10,'S'},{11,'S'},{12,'S'},{13,'S'}
     };
 
     std::vector<Player_Hand> players(6);
@@ -76,80 +248,100 @@ int main()
         players[i] = DealHand(deck);
     }
     
-    Player pranjal;
-    pranjal.balance = 10000;
-    pranjal.confidence = 100;
-    pranjal.bluff = 10;
-    pranjal.honesty = 80;
-    pranjal.hand = players[0];
+    Player p1;
+    p1.name = "Pranjal";
+    p1.balance = 10000;
+    p1.confidence = 100;
+    p1.bluff = 10;
+    p1.honesty = 80;
+    p1.hand = players[0];
     
-    Player paawani;
-    paawani.balance = 10000;
-    paawani.confidence = 90;
-    paawani.bluff = 40;
-    paawani.honesty = 50;
-    paawani.hand = players[1];
+    Player p2;
+    p2.name = "Paawani";
+    p2.balance = 10000;
+    p2.confidence = 90;
+    p2.bluff = 40;
+    p2.honesty = 50;
+    p2.hand = players[1];
     
-    Player candy;
-    candy.balance = 10000;
-    candy.confidence = 70;
-    candy.bluff = 0;
-    candy.honesty = 100;
-    candy.hand = players[2];
+    Player p3;
+    p3.name = "candy";
+    p3.balance = 10000;
+    p3.confidence = 70;
+    p3.bluff = 0;
+    p3.honesty = 100;
+    p3.hand = players[2];
     
-    Player kishu;
-    kishu.balance = 10000;
-    kishu.confidence = 100;
-    kishu.bluff = 90;
-    kishu.hand = players[3];
+    Player p4;
+    p4.name = "kishu";
+    p4.balance = 10000;
+    p4.confidence = 100;
+    p4.bluff = 100;
+    p4.honesty = 0;
+    p4.hand = players[3];
     
-    Player anita;
-    anita.balance = 10000;
-    anita.confidence = 100;
-    anita.bluff = 0;
-    anita.honesty = 100;
-    anita.hand = players[4];
+    Player p5;
+    p5.name = "anita";
+    p5.balance = 10000;
+    p5.confidence = 100;
+    p5.bluff = 0;
+    p5.honesty = 100;
+    p5.hand = players[4];
     
-    Player popo;
-    popo.balance = 10000;
-    popo.confidence = 0;
-    popo.bluff = 0;
-    popo.honesty = 100;
-    popo.hand = players[5];
+    Player p6;
+    p6.name = "popo";
+    p6.balance = 10000;
+    p6.confidence = 0;
+    p6.bluff = 0;
+    p6.honesty = 100;
+    p6.hand = players[5];
     
-    std::cout << "pranjal" << '\n';
-    std::cout << pranjal.hand.card1.rank << popo.hand.card1.suit << '\n';
-    std::cout << pranjal.hand.card2.rank << popo.hand.card2.suit << '\n';
-    std::cout << pranjal.hand.card3.rank << popo.hand.card3.suit << '\n';
+    std::cout << p1.name << '\n';
+    std::cout << p1.hand.card1.rank << p1.hand.card1.suit << '\n';
+    std::cout << p1.hand.card2.rank << p1.hand.card2.suit << '\n';
+    std::cout << p1.hand.card3.rank << p1.hand.card3.suit << '\n';
     
-    std::cout << "paawani" << '\n';
-    std::cout << paawani.hand.card1.rank << popo.hand.card1.suit << '\n';
-    std::cout << paawani.hand.card2.rank << popo.hand.card2.suit << '\n';
-    std::cout << paawani.hand.card3.rank << popo.hand.card3.suit << '\n';
+    std::cout << p2.name << '\n';
+    std::cout << p2.hand.card1.rank << p2.hand.card1.suit << '\n';
+    std::cout << p2.hand.card2.rank << p2.hand.card2.suit << '\n';
+    std::cout << p2.hand.card3.rank << p2.hand.card3.suit << '\n';
     
-    std::cout << "candy" << '\n';
-    std::cout << candy.hand.card1.rank << popo.hand.card1.suit << '\n';
-    std::cout << candy.hand.card2.rank << popo.hand.card2.suit << '\n';
-    std::cout << candy.hand.card3.rank << popo.hand.card3.suit << '\n';
+    std::cout << p3.name << '\n';
+    std::cout << p3.hand.card1.rank << p3.hand.card1.suit << '\n';
+    std::cout << p3.hand.card2.rank << p3.hand.card2.suit << '\n';
+    std::cout << p3.hand.card3.rank << p3.hand.card3.suit << '\n';
     
-    std::cout << "kishu" << '\n';
-    std::cout << kishu.hand.card1.rank << popo.hand.card1.suit << '\n';
-    std::cout << kishu.hand.card2.rank << popo.hand.card2.suit << '\n';
-    std::cout << kishu.hand.card3.rank << popo.hand.card3.suit << '\n';
+    std::cout << p4.name << '\n';
+    std::cout << p4.hand.card1.rank << p4.hand.card1.suit << '\n';
+    std::cout << p4.hand.card2.rank << p4.hand.card2.suit << '\n';
+    std::cout << p4.hand.card3.rank << p4.hand.card3.suit << '\n';
     
-    std::cout << "anita" << '\n';
-    std::cout << anita.hand.card1.rank << popo.hand.card1.suit << '\n';
-    std::cout << anita.hand.card2.rank << popo.hand.card2.suit << '\n';
-    std::cout << anita.hand.card3.rank << popo.hand.card3.suit << '\n';
+    std::cout << p5.name << '\n';
+    std::cout << p5.hand.card1.rank << p5.hand.card1.suit << '\n';
+    std::cout << p5.hand.card2.rank << p5.hand.card2.suit << '\n';
+    std::cout << p5.hand.card3.rank << p5.hand.card3.suit << '\n';
     
-    std::cout << "popo" << '\n';
-    std::cout << popo.hand.card1.rank << popo.hand.card1.suit << '\n';
-    std::cout << popo.hand.card2.rank << popo.hand.card2.suit << '\n';
-    std::cout << popo.hand.card3.rank << popo.hand.card3.suit << '\n';
+    std::cout << p6.name << '\n';
+    std::cout << p6.hand.card1.rank << p6.hand.card1.suit << '\n';
+    std::cout << p6.hand.card2.rank << p6.hand.card2.suit << '\n';
+    std::cout << p6.hand.card3.rank << p6.hand.card3.suit << '\n';
         
     
     
-    
+    Compare(p1 , p2);
+    Compare(p1 , p3);
+    Compare(p1 , p4);
+    Compare(p1 , p6);
+    Compare(p2 , p3);
+    Compare(p2 , p4);
+    Compare(p2 , p5);
+    Compare(p2 , p6);
+    Compare(p3 , p4);
+    Compare(p3 , p5);
+    Compare(p3 , p6);
+    Compare(p4 , p5);
+    Compare(p4 , p6);
+    Compare(p5 , p6);
     
     std::cin.get();
 }
