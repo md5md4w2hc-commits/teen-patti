@@ -64,7 +64,8 @@ struct Player_Mood
 {
     int currentConfidence;
     int streak; // wins/losses in a row
-    int tilt; // rises after losses, may increase bluff frequency
+    int desperation; // rises after losses, may increase bluff frequency
+    int currentHonesty;
 };
 
 int maxValue(const Player &a)
@@ -129,6 +130,9 @@ Player Check_for_max(const Player &p1 ,const Player &p2)
 Player Winner(Player p)
 {
     std::cout << "the winner is : " << p.name << '\n';
+    p.confidence += 50;
+    p.bluff += 10;
+    p.honesty -= 10;
     return p;
 }
 
@@ -394,6 +398,46 @@ Player Final(const Player &p1 ,const Player &p2)
     {
         return Check_winner_for_highCard(p1 , p2);
     }
+}
+
+Player Player_Mood_In_Game(Player &p , Player_Mood &m)
+{
+    Player winner = p;
+    
+    std::vector<int> ranks = {p.hand.card1.rank , p.hand.card2.rank , p.hand.card3.rank};
+    
+    if(IsTrail(winner))
+    {
+        m.currentConfidence += 90;
+        m.currentHonesty -= 15;
+        m.desperation -= 20;
+    }
+    else if(IsSequence(ranks))
+    {
+        m.currentConfidence += 70;
+        m.currentHonesty -= 10;
+        m.desperation -= 15;
+    }
+    else if(IsColour(winner))
+    {
+        m.currentConfidence += 40;
+        m.currentHonesty -= 5;
+        m.desperation -= 5;
+    }
+    else if(IsPair(winner))
+    {
+        m.currentConfidence += 10;
+        m.currentHonesty += 5;
+        m.desperation += 5;
+    }
+    else
+    {
+        m.currentConfidence += 0;
+        m.currentHonesty += 15;
+        m.desperation += 15;
+    }
+    
+    return winner;
 }
 
 int main()
