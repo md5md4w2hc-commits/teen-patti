@@ -452,13 +452,107 @@ int balance_checker(Player &p1 , Player &p2 , Player &p3 , Player &p4 , Player &
     return n;
 }
 
+Player Move(Player &p , double round)
+{
+    p.balance -= round;
+    
+    return p;
+}
+
+Player Blind(Player &p , double round)
+{
+    p.balance -= 2*round;
+    
+    return p;
+}
+
+Player Counter(Player &p , double round)
+{
+    p.balance -= 3*round;
+    
+    return p;
+}
+
+Player Fold(Player &p , double round)
+{
+    return p;
+}
+
+
+Player Funtion(Player &p , Player_Mood m , double round , int &number_of_player , int move_made)
+{
+    std::vector<int> ranks = {p.hand.card1.rank , p.hand.card2.rank , p.hand.card3.rank};
+    bool card_seen = false;
+    int blind_counter = 0;
+    
+    if(card_seen)
+    {
+        if(m.currentHonesty > 50)
+        {
+            if(IsTrail(p))
+            {
+                Move(p , round);
+                return p;
+            }
+            if(IsSequence(ranks))
+            {
+                Move(p , round);
+                return p;
+            }
+            if(IsColour(p) && move_made < 4)
+            {
+                Move(p , round);
+                return p;
+            }
+            if(IsPair(p) && move_made < 1)
+            {
+                Move(p , round);
+                return p;
+            }
+        }
+        else
+        {
+            if(number_of_player > 5)
+            {
+                Move(p , round);
+                return p;
+            }
+        }
+    }
+    else
+    {
+        if(m.currentConfidence >= 70)
+        {
+            if(blind_counter > 0)
+            {
+                Blind(p , round);
+                blind_counter ++;
+            }
+            else
+            {
+                Counter(p , round);
+            }
+            
+            m.currentConfidence -= 10;
+            
+            return p;
+        }
+        if(m.currentConfidence < 70)
+        {
+            card_seen = true;
+            return p;
+        }
+    }
+    return p;
+}
+
 void Game(Player &p1 , Player_Mood &m1 , Player &p2 , Player_Mood &m2 , Player &p3 , Player_Mood &m3 , Player &p4 , Player_Mood &m4 , Player &p5 , Player_Mood &m5 , Player &p6 , Player_Mood &m6)
 {
-    int n = balance_checker(p1 , p2 , p3 , p4 , p5 , p6);
+    int number_of_players = 6;
     
-    while(n > 0)
+    while(balance_checker(p1 , p2 , p3 , p4 , p5 , p6) > 0)
     {
-        std::cout << "it worked";
+        
     }
 }
 
