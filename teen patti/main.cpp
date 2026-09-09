@@ -471,110 +471,6 @@ Player Fold(Player &p , double round)
 }
 
 
-Player Funtion(Player &p , Player_Mood &m , double &round , int &number_of_player , int &move_made , int &blind_tracker ,  bool &card_seen , bool &p_fold)
-{
-    std::vector<int> ranks = {p.hand.card1.rank , p.hand.card2.rank , p.hand.card3.rank};
-    
-    if(card_seen)
-    {
-        if(m.currentHonesty > 50)
-        {
-            if(IsTrail(p))
-            {
-                Move(p , round);
-                return p;
-            }
-            if(IsSequence(ranks))
-            {
-                Move(p , round);
-                return p;
-            }
-            if(IsColour(p) && move_made < 4)
-            {
-                Move(p , round);
-                return p;
-            }
-            if(IsPair(p) && move_made < 1)
-            {
-                Move(p , round);
-                return p;
-            }
-            if(number_of_player > 2)
-            {
-                p_fold = true;
-                number_of_player--;
-            }
-        }
-        else
-        {
-            if(number_of_player > 5)
-            {
-                Move(p , round);
-                return p;
-            }
-        }
-    }
-    else
-    {
-        if(m.currentConfidence >= 70)
-        {
-            if(blind_tracker > 0)
-            {
-                Blind(p , round);
-                blind_tracker ++;
-            }
-            else
-            {
-                Counter(p , round);
-            }
-            
-            m.currentConfidence -= 10;
-            
-            return p;
-        }
-        if(m.currentConfidence < 70)
-        {
-            card_seen = true;
-            return p;
-        }
-    }
-    return p;
-}
-
-void Game(Player &p1 , Player_Mood &m1 , Player &p2 , Player_Mood &m2 , Player &p3 , Player_Mood &m3 , Player &p4 , Player_Mood &m4 , Player &p5 , Player_Mood &m5 , Player &p6 , Player_Mood &m6)
-{
-    while(balance_checker(p1 , p2 , p3 , p4 , p5 , p6) > 0)
-    {
-        int blind_tracker = 0;
-        int move_made = 0;
-        std::vector<Player> players = {p1 , p2 , p3 , p4 , p5 , p6};
-        int number_of_players = players.size();
-        double round = 10;
-        
-        bool card_seen_p1 = false;
-        bool p1_fold = false;
-        bool card_seen_p2 = false;
-        bool p2_fold = false;
-        bool card_seen_p3 = false;
-        bool p3_fold = false;
-        bool card_seen_p4 = false;
-        bool p4_fold = false;
-        bool card_seen_p5 = false;
-        bool p5_fold = false;
-        bool card_seen_p6 = false;
-        bool p6_fold = false;
-        
-        Funtion(p1 , m1 , round , number_of_players , move_made , blind_tracker , card_seen_p1 , p1_fold);
-        if(p1_fold == false)
-        {
-            auto it = std::find(players.begin() , players.end(), p1);
-            if (it != players.end())
-                players.erase(it);
-        }
-        
-    }
-}
-
 int main()
 {
     std::vector<Card> deck =
@@ -669,8 +565,6 @@ int main()
     Final(p1 , p2);
         
     Player_Mood_In_Game(p1 , p_1);
-    
-    Game(p1 , p_1 , p2 , p_2 , p3 , p_3 , p4 , p_4 , p5 , p_5 , p6 , p_6);
     
     
     
