@@ -55,7 +55,6 @@ struct Player
     std::string name;
     double balance;
     int confidence;
-    int bluff;
     int honesty;
     Player_Hand hand;
 };
@@ -64,7 +63,6 @@ struct Player_Mood
 {
     int currentConfidence;
     int streak; // wins/losses in a row
-    int desperation; // rises after losses, may increase bluff frequency
     int currentHonesty;
 };
 
@@ -131,7 +129,6 @@ Player Winner(Player p)
 {
     std::cout << "the winner is : " << p.name << '\n';
     p.confidence += 50;
-    p.bluff += 10;
     p.honesty -= 10;
     return p;
 }
@@ -410,31 +407,26 @@ Player Player_Mood_In_Game(Player &p , Player_Mood &m)
     {
         m.currentConfidence += 90;
         m.currentHonesty -= 15;
-        m.desperation -= 20;
     }
     else if(IsSequence(ranks))
     {
         m.currentConfidence += 70;
         m.currentHonesty -= 10;
-        m.desperation -= 15;
     }
     else if(IsColour(winner))
     {
         m.currentConfidence += 40;
         m.currentHonesty -= 5;
-        m.desperation -= 5;
     }
     else if(IsPair(winner))
     {
         m.currentConfidence += 10;
         m.currentHonesty += 5;
-        m.desperation += 5;
     }
     else
     {
         m.currentConfidence += 0;
         m.currentHonesty += 15;
-        m.desperation += 15;
     }
     
     return winner;
@@ -479,11 +471,9 @@ Player Fold(Player &p , double round)
 }
 
 
-Player Funtion(Player &p , Player_Mood m , double round , int &number_of_player , int move_made)
+Player Funtion(Player &p , Player_Mood &m , double &round , int &number_of_player , int &move_made , int &blind_tracker ,  bool &card_seen , bool &p_fold)
 {
     std::vector<int> ranks = {p.hand.card1.rank , p.hand.card2.rank , p.hand.card3.rank};
-    bool card_seen = false;
-    int blind_counter = 0;
     
     if(card_seen)
     {
@@ -509,6 +499,11 @@ Player Funtion(Player &p , Player_Mood m , double round , int &number_of_player 
                 Move(p , round);
                 return p;
             }
+            if(number_of_player > 2)
+            {
+                p_fold = true;
+                number_of_player--;
+            }
         }
         else
         {
@@ -523,10 +518,10 @@ Player Funtion(Player &p , Player_Mood m , double round , int &number_of_player 
     {
         if(m.currentConfidence >= 70)
         {
-            if(blind_counter > 0)
+            if(blind_tracker > 0)
             {
                 Blind(p , round);
-                blind_counter ++;
+                blind_tracker ++;
             }
             else
             {
@@ -548,10 +543,34 @@ Player Funtion(Player &p , Player_Mood m , double round , int &number_of_player 
 
 void Game(Player &p1 , Player_Mood &m1 , Player &p2 , Player_Mood &m2 , Player &p3 , Player_Mood &m3 , Player &p4 , Player_Mood &m4 , Player &p5 , Player_Mood &m5 , Player &p6 , Player_Mood &m6)
 {
-    int number_of_players = 6;
-    
     while(balance_checker(p1 , p2 , p3 , p4 , p5 , p6) > 0)
     {
+        int blind_tracker = 0;
+        int move_made = 0;
+        std::vector<Player> players = {p1 , p2 , p3 , p4 , p5 , p6};
+        int number_of_players = players.size();
+        double round = 10;
+        
+        bool card_seen_p1 = false;
+        bool p1_fold = false;
+        bool card_seen_p2 = false;
+        bool p2_fold = false;
+        bool card_seen_p3 = false;
+        bool p3_fold = false;
+        bool card_seen_p4 = false;
+        bool p4_fold = false;
+        bool card_seen_p5 = false;
+        bool p5_fold = false;
+        bool card_seen_p6 = false;
+        bool p6_fold = false;
+        
+        Funtion(p1 , m1 , round , number_of_players , move_made , blind_tracker , card_seen_p1 , p1_fold);
+        if(p1_fold == false)
+        {
+            auto it = std::find(players.begin() , players.end(), p1);
+            if (it != players.end())
+                players.erase(it);
+        }
         
     }
 }
@@ -577,78 +596,66 @@ int main()
     p1.name = "Pranjal";
     p1.balance = 10000;
     p1.confidence = 100;
-    p1.bluff = 10;
     p1.honesty = 80;
     p1.hand = player_hand[0];
     Player_Mood p_1;
     p_1.currentConfidence = p1.confidence;
     p_1.currentHonesty = p1.honesty;
-    p_1.desperation = p1.balance / 1000;
     p_1.streak = 0;
     
     Player p2;
     p2.name = "Paawani";
     p2.balance = 10000;
     p2.confidence = 90;
-    p2.bluff = 40;
     p2.honesty = 50;
     p2.hand = player_hand[1];
     Player_Mood p_2;
     p_2.currentConfidence = p2.confidence;
     p_2.currentHonesty = p2.honesty;
-    p_2.desperation = p2.balance / 1000;
     p_2.streak = 0;
     
     Player p3;
     p3.name = "candy";
     p3.balance = 10000;
     p3.confidence = 70;
-    p3.bluff = 0;
     p3.honesty = 100;
     p3.hand = player_hand[2];
     Player_Mood p_3;
     p_3.currentConfidence = p3.confidence;
     p_3.currentHonesty = p3.honesty;
-    p_3.desperation = p3.balance / 1000;
     p_3.streak = 0;
     
     Player p4;
     p4.name = "kishu";
     p4.balance = 10000;
     p4.confidence = 100;
-    p4.bluff = 100;
     p4.honesty = 0;
     p4.hand = player_hand[3];
     Player_Mood p_4;
     p_4.currentConfidence = p4.confidence;
     p_4.currentHonesty = p4.honesty;
-    p_4.desperation = p4.balance / 1000;
     p_4.streak = 0;
     
     Player p5;
     p5.name = "anita";
     p5.balance = 10000;
     p5.confidence = 100;
-    p5.bluff = 0;
     p5.honesty = 100;
     p5.hand = player_hand[4];
     Player_Mood p_5;
     p_5.currentConfidence = p5.confidence;
     p_5.currentHonesty = p5.honesty;
-    p_5.desperation = p5.balance / 1000;
     p_5.streak = 0;
     
     Player p6;
     p6.name = "popo";
     p6.balance = 10000;
     p6.confidence = 0;
-    p6.bluff = 0;
     p6.honesty = 100;
     p6.hand = player_hand[5];
     Player_Mood p_6;
     p_6.currentConfidence = p6.confidence;
     p_6.currentHonesty = p6.honesty;
-    p_6.desperation = p6.balance / 1000;
     p_6.streak = 0;
     
     
