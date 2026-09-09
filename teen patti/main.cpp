@@ -440,6 +440,28 @@ Player Player_Mood_In_Game(Player &p , Player_Mood &m)
     return winner;
 }
 
+int balance_checker(Player &p1 , Player &p2 , Player &p3 , Player &p4 , Player &p5 , Player &p6)
+{
+    int n = 0;
+    
+    if(p1.balance > 0 && p2.balance > 0 && p3.balance > 0 && p4.balance > 0 && p5.balance > 0 && p6.balance > 0)
+    {
+        n = 1;
+    }
+    
+    return n;
+}
+
+void Game(Player &p1 , Player_Mood &m1 , Player &p2 , Player_Mood &m2 , Player &p3 , Player_Mood &m3 , Player &p4 , Player_Mood &m4 , Player &p5 , Player_Mood &m5 , Player &p6 , Player_Mood &m6)
+{
+    int n = balance_checker(p1 , p2 , p3 , p4 , p5 , p6);
+    
+    while(n > 0)
+    {
+        std::cout << "it worked";
+    }
+}
+
 int main()
 {
     std::vector<Card> deck =
@@ -464,6 +486,11 @@ int main()
     p1.bluff = 10;
     p1.honesty = 80;
     p1.hand = player_hand[0];
+    Player_Mood p_1;
+    p_1.currentConfidence = p1.confidence;
+    p_1.currentHonesty = p1.honesty;
+    p_1.desperation = p1.balance / 1000;
+    p_1.streak = 0;
     
     Player p2;
     p2.name = "Paawani";
@@ -472,6 +499,11 @@ int main()
     p2.bluff = 40;
     p2.honesty = 50;
     p2.hand = player_hand[1];
+    Player_Mood p_2;
+    p_2.currentConfidence = p2.confidence;
+    p_2.currentHonesty = p2.honesty;
+    p_2.desperation = p2.balance / 1000;
+    p_2.streak = 0;
     
     Player p3;
     p3.name = "candy";
@@ -480,6 +512,11 @@ int main()
     p3.bluff = 0;
     p3.honesty = 100;
     p3.hand = player_hand[2];
+    Player_Mood p_3;
+    p_3.currentConfidence = p3.confidence;
+    p_3.currentHonesty = p3.honesty;
+    p_3.desperation = p3.balance / 1000;
+    p_3.streak = 0;
     
     Player p4;
     p4.name = "kishu";
@@ -488,6 +525,11 @@ int main()
     p4.bluff = 100;
     p4.honesty = 0;
     p4.hand = player_hand[3];
+    Player_Mood p_4;
+    p_4.currentConfidence = p4.confidence;
+    p_4.currentHonesty = p4.honesty;
+    p_4.desperation = p4.balance / 1000;
+    p_4.streak = 0;
     
     Player p5;
     p5.name = "anita";
@@ -496,6 +538,11 @@ int main()
     p5.bluff = 0;
     p5.honesty = 100;
     p5.hand = player_hand[4];
+    Player_Mood p_5;
+    p_5.currentConfidence = p5.confidence;
+    p_5.currentHonesty = p5.honesty;
+    p_5.desperation = p5.balance / 1000;
+    p_5.streak = 0;
     
     Player p6;
     p6.name = "popo";
@@ -504,6 +551,11 @@ int main()
     p6.bluff = 0;
     p6.honesty = 100;
     p6.hand = player_hand[5];
+    Player_Mood p_6;
+    p_6.currentConfidence = p6.confidence;
+    p_6.currentHonesty = p6.honesty;
+    p_6.desperation = p6.balance / 1000;
+    p_6.streak = 0;
     
     
     DebugHand(p1);
@@ -515,6 +567,9 @@ int main()
     
     Final(p1 , p2);
         
+    Player_Mood_In_Game(p1 , p_1);
+    
+    Game(p1 , p_1 , p2 , p_2 , p3 , p_3 , p4 , p_4 , p5 , p_5 , p6 , p_6);
     
     
     
